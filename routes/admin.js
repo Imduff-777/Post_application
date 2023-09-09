@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const categoria = require("../models/Categoria");
+const Categoria = require("../models/Categoria");
 const router = express.Router(); //o router, serve para criar rotas que serão chamadas dentro de outra rota no arquivo principal, que no nosso caso é o app.js
 
 router.get("/", (req, res) => {
@@ -100,6 +101,16 @@ router.post("/categorias/edit", (req, res) => {
 
     }).catch((err) => {
         req.flash("error_msg", "Houve um erro ao editar a categoria!")
+        res.redirect("/admin/categorias")
+    })
+})
+
+router.post("/categorias/deletar", (req, res) => {
+    categoria.Categoria.findByIdAndRemove({ _id: req.body.id }).then(() => {
+        req.flash("success_msg", "Categoria excluida com sucesso!")
+        res.redirect("/admin/categorias")
+    }).catch((err) => {
+        req.flash("error_msg", "houve um erro ao deletar a categoria")
         res.redirect("/admin/categorias")
     })
 })
